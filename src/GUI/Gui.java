@@ -1,6 +1,14 @@
+package GUI;
+
+
+
 //Θελούρας Κωνσταντίνος Παναγιώτης
 //icsd12058
 
+import PassMan.EncryptionUtils;
+import PassMan.EncryptionUtils;
+import PassMan.PasswodManager;
+import PassMan.User;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -39,7 +47,7 @@ public class Gui extends JFrame implements ActionListener {
     private User user;
     private JPasswordField newPasswd;
     private JTextField domain;
-    private final Image image = new ImageIcon(this.getClass().getResource("Images/back.jpg")).getImage();
+    private final Image image = new ImageIcon(this.getClass().getResource("back.jpg")).getImage();
     private final JLabel info = new JLabel();
 
     //constructor
@@ -300,7 +308,7 @@ public class Gui extends JFrame implements ActionListener {
         if (ae.getSource().equals(login)) {
 
             try {
-                if (Asfaleia.checkHash(username.getText(), passwd.getText())) {
+                if (PasswodManager.checkHash(username.getText(), passwd.getText())) {
                     user = new User(username.getText(), passwd.getText(), EncryptionUtils.getsKey(passwd.getText(), username.getText()));
                     initMainAppFrame();
                 } else {
@@ -318,7 +326,7 @@ public class Gui extends JFrame implements ActionListener {
 
             try {
                 User user = new User(name.getText(), surname.getText(), usernameSign.getText(), email.getText(), masterPasswd.getText());
-                Asfaleia.createAcc(user);
+                PasswodManager.createAcc(user);
             } catch (Exception ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -332,7 +340,7 @@ public class Gui extends JFrame implements ActionListener {
         }
         if (ae.getSource().equals(ok2)) {
             try {
-                Asfaleia.newPasswd(newPasswd.getText(), user, domain.getText());
+                PasswodManager.newPasswd(newPasswd.getText(), user, domain.getText());
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvalidKeySpecException ex) {
@@ -350,7 +358,7 @@ public class Gui extends JFrame implements ActionListener {
             domain.setVisible(true);
             ok2.setVisible(true);
             try {
-                info.setText(Asfaleia.decryptPasswd(domain.getText(), user));
+                info.setText(PasswodManager.decryptPasswd(domain.getText(), user));
             } catch (IOException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -360,7 +368,7 @@ public class Gui extends JFrame implements ActionListener {
             domain.setVisible(true);
             ok2.setVisible(true);
             try {
-                Asfaleia.deletePasswd(domain.getText(), user);
+                PasswodManager.deletePasswd(domain.getText(), user);
             } catch (IOException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             }

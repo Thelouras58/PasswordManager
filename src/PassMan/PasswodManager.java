@@ -1,5 +1,11 @@
+package PassMan;
 
 
+
+//import GUI.Gui;
+import GUI.Gui;
+import PassMan.EncryptionUtils;
+import CA.CertificateUtils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +23,7 @@ import java.security.spec.InvalidKeySpecException;
 import javax.swing.JPasswordField;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 
-public class Asfaleia {
+public class PasswodManager {
    
  
 
