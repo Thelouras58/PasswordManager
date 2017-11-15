@@ -1,14 +1,14 @@
 package PassMan;
 
-//Θελούρας Κωνσταντίνος Παναγιώτης
-//icsd12058
-
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
@@ -18,7 +18,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-//κλάση στην οποία θα υπάρχουν όλλες οι μέθοδοι για την κρυπτογράφιση και το hashing
 public class EncryptionUtils {
 
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
@@ -55,8 +54,14 @@ public class EncryptionUtils {
 
     }
 
+    public static KeyPair generateRSAKeyPair() throws Exception {
+        KeyPairGenerator kpGen = KeyPairGenerator.getInstance("RSA", "BC");
+        kpGen.initialize(2048, new SecureRandom());
+        return kpGen.generateKeyPair();
+    }
+
     public static String bytesToHex(byte[] bytes) {
-        // αυτή η μέθοδος από εδώ https://tinyurl.com/yd3jkjqr
+    
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;

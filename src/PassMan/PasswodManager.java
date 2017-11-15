@@ -1,7 +1,5 @@
 package PassMan;
 
-
-
 //import GUI.Gui;
 import GUI.Gui;
 import PassMan.EncryptionUtils;
@@ -24,8 +22,6 @@ import javax.swing.JPasswordField;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 
 public class PasswodManager {
-   
- 
 
     char[] caPassword = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     static FileOutputStream fop = null;
@@ -38,8 +34,6 @@ public class PasswodManager {
     public static void main(String[] args) throws Exception {
         Gui g = new Gui();
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-
-        CertificateUtils.creatAppCerAndKeys();  // το έτρεξα μόνο την πρώτη φορά για να δημιουργηθούν το certificate και τα κλειδία της εφαρμογής
     }
 
     public static void createAcc(User user) throws Exception {              //μέθοδος για την δημιουργία του λογαριασμού του χρήστη

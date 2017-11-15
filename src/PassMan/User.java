@@ -1,8 +1,5 @@
 package PassMan;
 
-//Θελούρας Κωνσταντίνος Παναγιώτης
-//icsd12058
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,47 +33,47 @@ public class User {
         this.salt = salt;
     }
 
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
-    public byte[] getSalt() {
+    protected byte[] getSalt() {
         return salt;
     }
 
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
-    public String getSurname() {
+    protected String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    protected void setSurname(String surname) {
         this.surname = surname;
     }
 
-    public String getUsername() {
+    protected String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    protected void setUsername(String username) {
         this.username = username;
     }
 
-    public String getEmail() {
+    protected String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    protected void setEmail(String email) {
         this.email = email;
     }
 
-    public String getMastePasswd() {
+    protected String getMastePasswd() {
         return mastePasswd;
     }
 
-    public void setMastePasswd(String mastePasswd) {
+    protected void setMastePasswd(String mastePasswd) {
         this.mastePasswd = mastePasswd;
     }
 

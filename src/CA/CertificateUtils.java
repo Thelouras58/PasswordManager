@@ -1,8 +1,5 @@
 package CA;
 
-//Θελούρας Κωνσταντίνος Παναγιώτης
-//icsd12058
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -26,7 +23,9 @@ import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
@@ -78,7 +77,7 @@ public class CertificateUtils {
         calendar.add(Calendar.MONTH, 12);
         Date endDate = calendar.getTime();
 
-        //δημιουργία κλειδών για τη εφαρμογή
+        //Create Application's pair of keys
         KeyPair caKeys = generateRSAKeyPair();
         X509V1CertificateGenerator certGen = new X509V1CertificateGenerator();
 
@@ -115,9 +114,7 @@ public class CertificateUtils {
 
     public static KeyPair generateRSAKeyPair() throws Exception {
         KeyPairGenerator kpGen = KeyPairGenerator.getInstance("RSA", "BC");
-
         kpGen.initialize(2048, new SecureRandom());
-
         return kpGen.generateKeyPair();
     }
 
@@ -234,7 +231,15 @@ public class CertificateUtils {
         pemWriter.close();
     }
 
-    public static boolean checkCertificates() {
+       public static boolean checkCertificates(X509Certificate cert) throws CertificateNotYetValidException {
+        if (cert instanceof X509Certificate) {
+            try {
+                ((X509Certificate) cert).checkValidity();
+                return true;
+            } catch (CertificateExpiredException cee) {
+                return false;
+            }
+        }
         return true;
     }
 }
