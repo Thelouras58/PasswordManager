@@ -1,5 +1,4 @@
-//Θελούρας Κωνσταντίνος Παναγιώτης
-//icsd12058
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -19,8 +18,8 @@ import javax.swing.JPasswordField;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 
 public class Asfaleia {
-
    
+ 
 
     char[] caPassword = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     static FileOutputStream fop = null;
