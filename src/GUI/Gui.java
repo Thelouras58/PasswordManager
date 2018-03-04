@@ -1,6 +1,6 @@
 package GUI;
 
-import PassMan.EncryptionUtils;
+
 import PassMan.EncryptionUtils;
 import PassMan.PasswodManager;
 import PassMan.User;
@@ -16,10 +16,10 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.*;
 
-//κλάση για την αναπαράσταση του γραφικού περιβάλλοντος της εφαρμογής
+
 public class Gui extends JFrame implements ActionListener {
 
-    //δήλωση μεταωλητών 
+
     private JButton register;
     private JButton signIn;
     private JTextField username;
@@ -45,13 +45,13 @@ public class Gui extends JFrame implements ActionListener {
     private final Image image = new ImageIcon(this.getClass().getResource("back.jpg")).getImage();
     private final JLabel info = new JLabel();
 
-    //constructor
+   
     public Gui() {
         initGui();
     }
 
     public void initGui() {
-        //αρχικοποίηση συστατικών του γραφικού περιβάλοντος.
+        
         this.setSize(360, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,7 +82,7 @@ public class Gui extends JFrame implements ActionListener {
         domain = new JTextField();
         ok2 = new JButton("ok2");
 
-        //εισαγώγη τους στο βασικό JFrame
+            
         this.add(register);
         this.add(signIn);
         this.add(login);
@@ -130,13 +130,13 @@ public class Gui extends JFrame implements ActionListener {
 
         ok2.setVisible(false);
 
-        email.setText("email..");
-        usernameSign.setText("username..");
-        domain.setText("domain..");
-        newPasswd.setText("password..");
-        masterPasswd.setText("password..");
-        name.setText("name..");
-        surname.setText("surename..");
+        email.setText("email");
+        usernameSign.setText("username");
+        domain.setText("domain");
+        newPasswd.setText("password");
+        masterPasswd.setText("master password");
+        name.setText("name");
+        surname.setText("surename");
         register.setBounds(65, 48, 100, 60);
         signIn.setBounds(185, 48, 100, 60);
         login.setBounds(185, 48, 100, 60);
@@ -183,71 +183,60 @@ public class Gui extends JFrame implements ActionListener {
         this.deletePasswd.addActionListener(this);
 
         newPasswd.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 newPasswd.setText("");
             }
         });
         domain.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 domain.setText("");
             }
         });
         email.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 email.setText("");
             }
         });
         name.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 name.setText("");
             }
         });
+        username.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                username.setText("");
+            }
+        });
         surname.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 surname.setText("");
             }
         });
         masterPasswd.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 masterPasswd.setText("");
             }
         });
         username.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 username.setText("");
             }
         });
         passwd.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 passwd.setText("");
             }
         });
-//        this.addWindowListener(new java.awt.event.WindowAdapter() {
-//            @Override
-//            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-//                try {
-//                    Asfaleia.integrityMech(user);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (KeyStoreException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (NoSuchAlgorithmException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (InvalidKeyException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (SignatureException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (CertificateException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (UnrecoverableKeyException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (NoSuchProviderException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (InvalidCipherTextException ex) {
-//                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
+
     }
 
     public void initResgisterForm() {
@@ -264,9 +253,15 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     public void initSignInForm() {
-        //εμφάνιση των καταλληλων component για την φόρμα σύνδεσης
+        //init login form
         register.setVisible(false);
         signIn.setVisible(false);
+        usernameSign.setVisible(false);
+        masterPasswd.setVisible(false);
+        email.setVisible(false);
+        name.setVisible(false);
+        surname.setVisible(false);
+        ok.setVisible(false);
         username.setVisible(true);
         passwd.setVisible(true);
         login.setVisible(true);
@@ -276,7 +271,7 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     public void initMainAppFrame() {
-        //εμφάνιση των καταλληλων component για την βασική οθόνη της εφαρμογής
+        //init main menu after login 
         addPasswd.setVisible(true);
         decryptPasswd.setVisible(true);
         encryptPasswd.setVisible(true);
@@ -322,10 +317,11 @@ public class Gui extends JFrame implements ActionListener {
             try {
                 User user = new User(name.getText(), surname.getText(), usernameSign.getText(), email.getText(), masterPasswd.getText());
                 PasswodManager.createAcc(user);
+                initSignInForm();
             } catch (Exception ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             }
-            initMainAppFrame();
+           
         }
         if (ae.getSource().equals(addPasswd)) {
             newPasswd.setVisible(true);

@@ -1,6 +1,6 @@
 package PassMan;
 
-//import GUI.Gui;
+
 import GUI.Gui;
 import PassMan.EncryptionUtils;
 import CA.CertificateUtils;
@@ -18,43 +18,43 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
-import javax.swing.JPasswordField;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 
 public class PasswodManager {
 
-    char[] caPassword = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-    static FileOutputStream fop = null;
+    private char[] caPassword = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    private static FileOutputStream fop = null;
     static FileInputStream fin = null;
     private static KeyPair usersPair;
     private static PrivateKey caPrKey;
     private static X509Certificate caCert;
     private static X509Certificate userCert;
-
+    private static Gui g;
     public static void main(String[] args) throws Exception {
-        Gui g = new Gui();
+       g = new Gui();
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
-    public static void createAcc(User user) throws Exception {              //μέθοδος για την δημιουργία του λογαριασμού του χρήστη
-        usersPair = CertificateUtils.generateRSAKeyPair();                 //δημιουργία ζεύγος κλειδιών για τον χρήστη
-        caPrKey = CertificateUtils.getCAPrivateKey();                     //το private key της εφαρμογης το παιρνουμε από το keystore
-        caCert = CertificateUtils.getCAcert();                           //παιρνουμε το certificate της εφαρμοφης     
-        //δημιουργια request για certificate  & δημιουργία certificate απο αυτό
+    public static void createAcc(User user) throws Exception {              
+        usersPair = CertificateUtils.generateRSAKeyPair();                
+        caPrKey = CertificateUtils.getCAPrivateKey();                  
+        caCert = CertificateUtils.getCAcert();                         
+       
         userCert = CertificateUtils.createCertificate(CertificateUtils.createCSR(usersPair, user.getName(), user.getSurname(), user.getUsername(), user.getEmail(), caCert, caPrKey), caCert, caPrKey);
-        //γράψημο του certificate και των κλειδιων του χρήστη σε αρχεία
+        //write user's certificate and keys in a file 
         CertificateUtils.writePerFile(userCert, user.getUsername());
         CertificateUtils.writeKeysToPerFile(usersPair.getPrivate(), usersPair.getPublic(), user.getUsername());
         //hashing 
         String authHash = EncryptionUtils.getHashedPassword(EncryptionUtils.getsKey(user.getMastePasswd(), user.getUsername()), user.getMastePasswd());
         writeAuthFile(authHash, user.getUsername());
+        
 
     }
 
     public static boolean checkHash(String username, String passd) throws NoSuchAlgorithmException, InvalidKeySpecException, FileNotFoundException, IOException {
-        //μέθοδος για τον έλεγχο του hash κατά την είσοδο του χρήστη
+        //this method called when user login
 
-        //υπολγισμός του hash
+      
         String hash = EncryptionUtils.getHashedPassword(EncryptionUtils.getsKey(passd, username), passd);
         //authfile
         BufferedReader br = new BufferedReader(new FileReader("test.txt"));
@@ -62,7 +62,7 @@ public class PasswodManager {
         String line;
         String tempUsername = "";
         String tempHash = "";
-        //προσπέλαση του αρχέιου για να βρεθεί το ίδιο ζευγος username,hash
+        //check the file for the hash username match
         while ((line = br.readLine()) != null) {
             tempUsername = "";
             tempHash = "";
@@ -98,7 +98,7 @@ public class PasswodManager {
     }
 
     public static void writeAuthFile(String authHash, String username) {
-        //εγγραφη του αρχειου authfile κατά την εγγραφή του χρήστη στην εφαρμογή
+       
         try {
             fop = new FileOutputStream("test.txt", true);
             String st = username + "," + authHash + "\n";
@@ -111,11 +111,11 @@ public class PasswodManager {
     }
 
     public static void newPasswd(String passwd, User user, String domain) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        //άμμεση κρυπτογράφηση του καινούτιου κωδικου με το  sKey του χρήστη
+        //encrypt with user's sKey
         //System.out.println(EncryptionUtils.ecnrypt(passwd, user.getSalt()));
         String encyptedPasswd = EncryptionUtils.ecnrypt(passwd, user.getSalt());
         try {
-            //εισαγωγη του νέου κωδικου στο αρχείο με τους κωδικούς του χρήστη
+            //write the new password in the file 
             fop = new FileOutputStream("Users/" + user.getUsername() + "/encryptedPasswords.txt", true);
             String st = domain + "," + encyptedPasswd + "\n";
             fop.write(st.getBytes());
@@ -135,7 +135,7 @@ public class PasswodManager {
         String line;
         String tempDomain = "";
         String tempEncPasswd = "";
-        //προσπελαση του αρχείου για να βρεθεί το domain που ζητήθηκε και να αποκρυπτογραφηθεί ο κωδικος του
+        //parse file to find the password
         BufferedReader br = new BufferedReader(new FileReader("Users/" + user.getUsername() + "/encryptedPasswords.txt"));
         while ((line = br.readLine()) != null) {
             tempDomain = "";
@@ -171,7 +171,7 @@ public class PasswodManager {
 
     }
 
-    public static void deletePasswd(String domain, User user) throws FileNotFoundException, IOException { //from stack overflow
+    public static void deletePasswd(String domain, User user) throws FileNotFoundException, IOException {
         File inputFile = new File("Users/" + user.getUsername() + "/encryptedPasswords.txt");
         File tempFile = new File("Users/" + user.getUsername() + "/encryptedPasswordsTemp.txt");
 
@@ -180,8 +180,7 @@ public class PasswodManager {
 
         String lineToRemove = domain;
         String currentLine;
-        //δημιουργήτε ένα νέο  αρχείο που θα γραφτοθν όλλες οι γραμμες του παλιού εκτόσ απτην γραμμη ποθ θέλει να διαγραψει ο χρήστης
-        //η μέθοδος αυτη βρέθηκε στο stackoverflow
+        
         while ((currentLine = reader.readLine()) != null) {
             // trim newline when comparing with lineToRemove
 
@@ -202,7 +201,7 @@ public class PasswodManager {
     }
 
     public static void integrityMech(User user) throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, SignatureException, CertificateException, UnrecoverableKeyException, NoSuchProviderException, InvalidCipherTextException {
-        //μηχανισμος ακεραιοτητας κωδικών χρήστη
+        
         String line;
         String tempDomain = "";
         String tempEncPasswd = "";
