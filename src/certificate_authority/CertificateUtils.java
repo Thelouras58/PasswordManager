@@ -65,7 +65,7 @@ public class CertificateUtils {
     private static String newAlias = "newAlias";
     private static String pass = "abcdefgh";
     private static char[] password ={'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-    char[] caPassword = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    private char[] caPassword = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     public static final String SHA_ALGORITHM = "SHA1withRSA";
 
     public static void creatAppCerAndKeys() throws Exception {
@@ -122,7 +122,7 @@ public class CertificateUtils {
         FileInputStream input = new FileInputStream(keystoreFile);
         KeyStore getkeystore = KeyStore.getInstance(KeyStore.getDefaultType());
         getkeystore.load(input, pass.toCharArray());
-        Key pKey = getkeystore.getKey("new", password);
+      //  Key pKey = getkeystore.getKey("new", password);
         //System.out.println((PrivateKey) getkeystore.getKey("new", password));
         return (PrivateKey) getkeystore.getKey("new", password);
 

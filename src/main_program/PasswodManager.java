@@ -24,7 +24,7 @@ public class PasswodManager {
 
    
     private static FileOutputStream fop = null;
-    private  static FileInputStream fin = null;
+  //  private  static FileInputStream fin = null;
     private static KeyPair usersPair;
     private static PrivateKey caPrKey;
     private static X509Certificate caCert;
@@ -232,7 +232,7 @@ public class PasswodManager {
 
             String domain_digest = "<" + tempDomain + "," + EncryptionUtils.sha1(tempEncPasswd) + ">";
 
-            String sign = EncryptionUtils.DigitalSignature(domain_digest, CertificateUtils.getCAcert().getPublicKey(), CertificateUtils.getCAPrivateKey());
+            String sign = EncryptionUtils.digitalSignature(domain_digest, CertificateUtils.getCAcert().getPublicKey(), CertificateUtils.getCAPrivateKey());
 
             EncryptionUtils.ecnrypt(sign, user.getSalt());
             //εγγραφή της κρυπτογραφημένης υπογραφήςστο κατάλληλο αρχείο

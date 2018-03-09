@@ -71,7 +71,7 @@ public class EncryptionUtils {
         return new String(hexChars);
     }
 
-    public static String DigitalSignature(String text, PublicKey publicKey, PrivateKey privateKey) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public static String digitalSignature(String text, PublicKey publicKey, PrivateKey privateKey) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         byte[] data = text.getBytes("UTF8");
         Signature signature = Signature.getInstance("MD5WithRSA");
