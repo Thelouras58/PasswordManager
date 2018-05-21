@@ -1,6 +1,5 @@
 package main_program;
 
-
 import guis.Gui;
 import main_program.EncryptionUtils;
 import certificate_authority.CertificateUtils;
@@ -22,24 +21,24 @@ import org.bouncycastle.crypto.InvalidCipherTextException;
 
 public class PasswodManager {
 
-   
     private static FileOutputStream fop = null;
-  //  private  static FileInputStream fin = null;
+    //  private  static FileInputStream fin = null;
     private static KeyPair usersPair;
     private static PrivateKey caPrKey;
     private static X509Certificate caCert;
     private static X509Certificate userCert;
     private static Gui g;
+
     public static void main(String[] args) throws Exception {
         g = new Gui();
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
-    public static void createAcc(User user) throws Exception {              
-        usersPair = CertificateUtils.generateRSAKeyPair();                
-        caPrKey = CertificateUtils.getCAPrivateKey();                  
-        caCert = CertificateUtils.getCAcert();                         
-       
+    public static void createAcc(User user) throws Exception {
+        usersPair = CertificateUtils.generateRSAKeyPair();
+        caPrKey = CertificateUtils.getCAPrivateKey();
+        caCert = CertificateUtils.getCAcert();
+
         userCert = CertificateUtils.createCertificate(CertificateUtils.createCSR(usersPair, user.getName(), user.getSurname(), user.getUsername(), user.getEmail(), caCert, caPrKey), caCert, caPrKey);
         //write user's certificate and keys in a file 
         CertificateUtils.writePerFile(userCert, user.getUsername());
@@ -47,14 +46,12 @@ public class PasswodManager {
         //hashing 
         String authHash = EncryptionUtils.getHashedPassword(EncryptionUtils.getsKey(user.getMastePasswd(), user.getUsername()), user.getMastePasswd());
         writeAuthFile(authHash, user.getUsername());
-        
 
     }
 
     public static boolean checkHash(String username, String passd) throws NoSuchAlgorithmException, InvalidKeySpecException, FileNotFoundException, IOException {
         //this method called when user login
 
-      
         String hash = EncryptionUtils.getHashedPassword(EncryptionUtils.getsKey(passd, username), passd);
         //authfile
         BufferedReader br = new BufferedReader(new FileReader("test.txt"));
@@ -98,7 +95,7 @@ public class PasswodManager {
     }
 
     public static void writeAuthFile(String authHash, String username) {
-       
+
         try {
             fop = new FileOutputStream("test.txt", true);
             String st = username + "," + authHash + "\n";
@@ -164,7 +161,7 @@ public class PasswodManager {
     }
 
     public static void changePasswd(User user, String domain) {
-                    //TODO
+        //TODO
     }
 
     public static void deletePasswd(String domain, User user) throws FileNotFoundException, IOException {
@@ -174,9 +171,8 @@ public class PasswodManager {
         BufferedReader reader = new BufferedReader(new FileReader(inputFile));
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
 
-        
         String currentLine;
-        
+
         while ((currentLine = reader.readLine()) != null) {
             // trim newline when comparing with lineToRemove
 
@@ -197,13 +193,14 @@ public class PasswodManager {
     }
 
     public static void integrityMech(User user) throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException, SignatureException, CertificateException, UnrecoverableKeyException, NoSuchProviderException, InvalidCipherTextException {
-        
+
         String line;
         String tempDomain = "";
         String tempEncPasswd = "";
         BufferedReader br = new BufferedReader(new FileReader("Users/" + user.getUsername() + "/encryptedPasswords.txt"));
         fop = new FileOutputStream("Users/" + user.getUsername() + "/encryptedSignatures.txt", true);
-        //προσπέλαση του αρχείου με τους κωδικούς του χρήστη και δημιουργία της τελικής κρυπτογραφημένης υπογραφης για κάθε έναν από αυτούς
+ 
+        //parse the file with the passwords and make sign for their integridy
         while ((line = br.readLine()) != null) {
 
             tempDomain = "";
@@ -231,7 +228,7 @@ public class PasswodManager {
             String sign = EncryptionUtils.digitalSignature(domain_digest, CertificateUtils.getCAcert().getPublicKey(), CertificateUtils.getCAPrivateKey());
 
             EncryptionUtils.ecnrypt(sign, user.getSalt());
-            //εγγραφή της κρυπτογραφημένης υπογραφήςστο κατάλληλο αρχείο
+            //write the signature to a file 
             fop.write(sign.getBytes());
 
         }
