@@ -57,20 +57,19 @@ import org.bouncycastle.util.io.pem.PemObjectGenerator;
 import org.bouncycastle.util.io.pem.PemWriter;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 
-//κλαση στη οποία θα υπάρχουν όλες οι μέθοδοι που έχουν να κάνουν με certificates και κλειδιά
+//utility class with all the method for the keys and the certificates
 public class CertificateUtils {
 
     private static String keystoreFile = "keyStoreFile.bin"; //ονομα αρχείου τυπου keystore
     private static String caAlias = "caAlias";               //μεταβλητές για το keystore, ονοματα,κωδικοι
     private static String newAlias = "newAlias";
     private static String pass = "abcdefgh";
-    private static char[] password ={'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    private static char[] password = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     private char[] caPassword = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     public static final String SHA_ALGORITHM = "SHA1withRSA";
 
     public static void creatAppCerAndKeys() throws Exception {
 
-        // παιρνουμε την ημερομηνία τώρα και σε 12 μήνες που θα χρηστούν για  το certificate
         Calendar calendar = Calendar.getInstance();
         Date startDate = calendar.getTime();
         calendar.add(Calendar.MONTH, 12);
@@ -80,7 +79,7 @@ public class CertificateUtils {
         KeyPair caKeys = generateRSAKeyPair();
         X509V1CertificateGenerator certGen = new X509V1CertificateGenerator();
 
-        //στοιχεία certificate
+        // certificate fields
         X500Principal dnName = new X500Principal("CN=CA root");
         certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
         certGen.setSubjectDN(dnName);
@@ -92,17 +91,17 @@ public class CertificateUtils {
         //selfsigned
         X509Certificate cert = certGen.generate(caKeys.getPrivate(), "BC");
 
-        //certificate chain για να μπορέσει να μπεί το κλειδί στο keystore
+        //certificate chain to put the key in keystore
         java.security.cert.Certificate[] certChain = new java.security.cert.Certificate[1];
         certChain[0] = cert;
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        //βάζουμε κωδικό στο keyStore
+        //set password to keystore 
         keyStore.load(null, pass.toCharArray());
-        //βάζουμε το Certificate στο keyStore
+        //βpute the xer in keystore
         keyStore.setCertificateEntry(newAlias, cert);
-        //βάζουμε το private key στο keyStore
+        //private key to keystore
         keyStore.setKeyEntry("new", caKeys.getPrivate(), pass.toCharArray(), certChain);
-        //εγγραφη του keyStore σε αρχείο
+        //write keystore to file
         FileOutputStream output = new FileOutputStream(keystoreFile);
         keyStore.store(output, password);
 
@@ -122,7 +121,7 @@ public class CertificateUtils {
         FileInputStream input = new FileInputStream(keystoreFile);
         KeyStore getkeystore = KeyStore.getInstance(KeyStore.getDefaultType());
         getkeystore.load(input, pass.toCharArray());
-      //  Key pKey = getkeystore.getKey("new", password);
+        //  Key pKey = getkeystore.getKey("new", password);
         //System.out.println((PrivateKey) getkeystore.getKey("new", password));
         return (PrivateKey) getkeystore.getKey("new", password);
 
@@ -135,7 +134,6 @@ public class CertificateUtils {
         getkeystore.load(input, pass.toCharArray());
         Key pKey = getkeystore.getKey("new", password);
 
-       
         // System.out.println((X509Certificate) getkeystore.getCertificate(caAlias).getPublicKey());
         return (X509Certificate) getkeystore.getCertificate(caAlias);
         // caCert.verify(caCert.getPublicKey());
@@ -144,8 +142,8 @@ public class CertificateUtils {
 
     public static org.bouncycastle.pkcs.PKCS10CertificationRequest createCSR(KeyPair keys, String name, String surname, String username, String email, X509Certificate CAcert, PrivateKey CAprivateKey)
             throws Exception {
-        //μέθοδος για την δημιουργία Request για να πάρει certificate
 
+        //Create the requwst for the certificate
         X500NameBuilder x500NameBld = new X500NameBuilder(BCStyle.INSTANCE);
         x500NameBld.addRDN(BCStyle.CN, username);
         x500NameBld.addRDN(BCStyle.NAME, name);
@@ -161,13 +159,13 @@ public class CertificateUtils {
 
     public static X509Certificate createCertificate(PKCS10CertificationRequest csr, X509Certificate CAcert, PrivateKey CAprivateKey) throws
             OperatorCreationException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, CertificateException {
-        //δημιουργια Certificate από το request y
+        //create the certificate from the CSR request
 
         Calendar calendar = Calendar.getInstance();
         Date startDate = calendar.getTime();
 
         X500Name subject = csr.getSubject();
-        //timestamb για τον κωδικο του Certificate
+        //timestamp for cer's id
         BigInteger certSerialNumber = BigInteger.valueOf(System.currentTimeMillis());
 
         calendar.add(Calendar.MONTH, 6);
@@ -230,7 +228,7 @@ public class CertificateUtils {
         pemWriter.close();
     }
 
-       public static boolean checkCertificates(X509Certificate cert) throws CertificateNotYetValidException {
+    public static boolean checkCertificates(X509Certificate cert) throws CertificateNotYetValidException {
         if (cert instanceof X509Certificate) {
             try {
                 ((X509Certificate) cert).checkValidity();
