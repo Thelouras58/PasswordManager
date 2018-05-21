@@ -127,10 +127,6 @@ public class PasswodManager {
 
     }
 
-    public static void encryptPasswd(String domain, User user) {
-        // System.out.println(EncryptionUtils.ecnrypt(passwd, user.getSalt()));
-    }
-
     public static String decryptPasswd(String domain, User user) throws FileNotFoundException, IOException {
         String line;
         String tempDomain = "";
